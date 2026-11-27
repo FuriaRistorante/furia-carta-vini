@@ -498,7 +498,7 @@ window.fuThemeApply=function(){apply(D.getAttribute("data-theme")||"light")};})(
    slogan in alto, logo grande al centro, tre pillole in fila in basso. Niente linee. */
 .mobile-landing>.alga,.sidebar-col>.alga{display:none}
 .fu-top{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
-.fu-mark{display:block;width:34px;aspect-ratio:520/389;background:var(--carta);
+.fu-mark{display:block;flex-shrink:0;width:34px;height:26px;background:var(--carta);
   -webkit-mask:url(alga.svg) center/contain no-repeat;mask:url(alga.svg) center/contain no-repeat}
 .slogan{margin:0!important;font-size:13px!important;font-weight:400;letter-spacing:.01em!important;line-height:1.3;color:var(--carta)}
 .mobile-landing-sub,.brand-sub{display:block!important;text-align:center;margin:32px 0 0!important;
@@ -525,6 +525,7 @@ window.fuThemeApply=function(){apply(D.getAttribute("data-theme")||"light")};})(
 .mnb-l{font-size:13px!important}
 .fu-bottom{height:0;flex-shrink:0}
 .fu-center{padding-top:96px}
+.mobile-landing>*{flex-shrink:0}
 /* Desktop: stessa sequenza nella colonna */
 .sidebar-brand{padding-top:28px!important;display:flex;flex-direction:column;align-items:center}
 .sidebar-brand .fu-top{margin-bottom:110px}
