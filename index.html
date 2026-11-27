@@ -501,7 +501,7 @@ window.fuThemeApply=function(){apply(D.getAttribute("data-theme")||"light")};})(
 .fu-mark{display:block;width:34px;aspect-ratio:520/389;background:var(--carta);
   -webkit-mask:url(alga.svg) center/contain no-repeat;mask:url(alga.svg) center/contain no-repeat}
 .slogan{margin:0!important;font-size:13px!important;font-weight:400;letter-spacing:.01em!important;line-height:1.3;color:var(--carta)}
-.mobile-landing-sub,.brand-sub{display:block!important;text-align:center;margin:28px 0 0!important;
+.mobile-landing-sub,.brand-sub{display:block!important;text-align:center;margin:32px 0 0!important;
   font-size:13px!important;font-weight:400!important;letter-spacing:.01em!important;color:var(--carta)!important}
 .mobile-landing-sub::before,.mobile-landing-sub::after,.brand-sub::before,.brand-sub::after{content:none!important}
 /* Pillole: come sul sito, testo maiuscolo senza spaziatura, filo blu */
@@ -515,18 +515,19 @@ window.fuThemeApply=function(){apply(D.getAttribute("data-theme")||"light")};})(
 .mobile-nav-btn:active .mnb-l,.mobile-nav-btn:hover .mnb-l{color:var(--notte)!important}
 /* Mobile: slogan in alto, logo al centro, pillole in fila in fondo */
 .mobile-landing{justify-content:space-between;padding-left:20px!important;padding-right:20px!important}
-.mobile-landing>.fu-top{padding-top:calc(48px + env(safe-area-inset-top))}
+.mobile-landing>.fu-top{padding-top:calc(4px + env(safe-area-inset-top))}
 .fu-center{width:100%;display:flex;flex-direction:column;align-items:center;margin:auto 0}
 .fu-center h1{margin:0!important;width:100%;text-align:center}
 .mobile-landing-logo{max-width:min(74vw,340px)!important;margin:0 auto}
 .mobile-nav-btns{display:flex!important;flex-direction:column!important;align-items:center;width:100%!important;
-  margin:28px 0 0!important;gap:10px!important}
+  margin:40px 0 0!important;gap:12px!important}
 .mobile-nav-btn{width:236px!important;height:48px!important}
 .mnb-l{font-size:14.5px!important}
-.fu-bottom{height:110px;flex-shrink:0}
+.fu-bottom{height:0;flex-shrink:0}
+.fu-center{padding-top:96px}
 /* Desktop: stessa sequenza nella colonna */
-.sidebar-brand{padding-top:48px!important;display:flex;flex-direction:column;align-items:center}
-.sidebar-brand .fu-top{margin-bottom:64px}
+.sidebar-brand{padding-top:28px!important;display:flex;flex-direction:column;align-items:center}
+.sidebar-brand .fu-top{margin-bottom:110px}
 .brand-logo{max-width:230px!important}
 .nav-views{align-items:center;padding-top:36px!important;gap:10px!important}
 .btn-view{width:236px!important;height:50px!important;font-size:15px!important;color:var(--carta)}
