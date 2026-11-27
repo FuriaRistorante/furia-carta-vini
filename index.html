@@ -494,41 +494,47 @@ window.fuThemeButton=function(){var b=document.createElement("button");b.type="b
 window.fuThemeApply=function(){apply(D.getAttribute("data-theme")||"light")};})();
 </script>
 <style id="fu-cover">
-/* FURIA · copertina minimal come il sito (ref Gaia 27/11):
-   in alto slogan + cavallino piccoli, al centro il logo, sotto pillole sottili. Niente linee. */
+/* FURIA · copertina come la home del sito (27/11):
+   slogan in alto, logo grande al centro, tre pillole in fila in basso. Niente linee. */
 .mobile-landing>.alga,.sidebar-col>.alga{display:none}
-.fu-top{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
-.fu-mark{display:block;width:30px;aspect-ratio:520/389;background:var(--carta);
+.fu-top{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.fu-mark{display:block;width:34px;aspect-ratio:520/389;background:var(--carta);
   -webkit-mask:url(alga.svg) center/contain no-repeat;mask:url(alga.svg) center/contain no-repeat}
-.slogan{margin:0!important;font-size:9.5px!important;font-weight:400;letter-spacing:.14em!important;line-height:1.4;color:var(--carta)}
-.mobile-landing-sub,.brand-sub{display:block!important;text-align:center;margin:26px 0 22px!important;
-  font-size:9.5px!important;font-weight:400!important;letter-spacing:.2em!important;color:var(--carta-2)!important}
+.slogan{margin:0!important;font-size:13px!important;font-weight:400;letter-spacing:.01em!important;line-height:1.3;color:var(--carta)}
+.mobile-landing-sub,.brand-sub{display:block!important;text-align:center;margin:28px 0 0!important;
+  font-size:13px!important;font-weight:400!important;letter-spacing:.01em!important;color:var(--carta)!important}
 .mobile-landing-sub::before,.mobile-landing-sub::after,.brand-sub::before,.brand-sub::after{content:none!important}
-/* Mobile: slogan in alto, logo al centro dello schermo */
-.mobile-landing{justify-content:space-between}
-.mobile-landing>.fu-top{padding-top:calc(8px + env(safe-area-inset-top))}
-.fu-center{width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;margin:auto 0}
-.fu-center h1{margin:0!important;width:100%;text-align:center}
-.fu-bottom{height:62px;flex-shrink:0}
-.mobile-landing-logo{max-width:min(62vw,250px)!important;margin:0 auto}
-.mobile-nav-btns{width:auto!important;margin:0!important;align-items:center;gap:10px!important}
-.mobile-nav-btn{width:200px!important;min-height:0!important;height:32px;padding:0 16px!important;justify-content:center!important;
-  background:transparent!important;border-width:1px!important;transition:background-color .2s,color .2s}
-.mobile-nav-btn:active,.mobile-nav-btn:hover{background:var(--carta)!important}
-.mobile-nav-btn:active .mnb-l,.mobile-nav-btn:hover .mnb-l{color:var(--notte)!important}
-.mnb-l{font-size:9.5px!important;letter-spacing:.14em!important;font-weight:400!important;text-align:center}
+/* Pillole: come sul sito, testo maiuscolo senza spaziatura, filo blu */
+.mobile-nav-btn,.btn-view{height:44px!important;min-height:0!important;padding:0 14px!important;justify-content:center!important;
+  border:1px solid var(--carta)!important;border-radius:20px!important;background:transparent!important;
+  font-size:13.5px!important;font-weight:400!important;letter-spacing:.01em!important;text-transform:uppercase;
+  transition:background-color .2s,color .2s}
+.mnb-l{font-size:13.5px!important;letter-spacing:.01em!important;font-weight:400!important;text-align:center;white-space:nowrap;color:var(--carta)}
 .mnb-a{display:none!important}
+.mobile-nav-btn:active,.mobile-nav-btn:hover,.btn-view:hover,.btn-view.active{background:var(--carta)!important;color:var(--notte)!important}
+.mobile-nav-btn:active .mnb-l,.mobile-nav-btn:hover .mnb-l{color:var(--notte)!important}
+/* Mobile: slogan in alto, logo al centro, pillole in fila in fondo */
+.mobile-landing{justify-content:space-between;padding-left:20px!important;padding-right:20px!important}
+.mobile-landing>.fu-top{padding-top:calc(48px + env(safe-area-inset-top))}
+.fu-center{width:100%;display:flex;flex-direction:column;align-items:center;margin:auto 0}
+.fu-center h1{margin:0!important;width:100%;text-align:center}
+.mobile-landing-logo{max-width:min(74vw,340px)!important;margin:0 auto}
+.mobile-nav-btns{display:flex!important;flex-direction:row!important;width:100%!important;max-width:560px!important;
+  margin:0 0 72px!important;gap:10px!important}
+.mobile-nav-btn{flex:1 1 0;width:auto!important}
+@media(max-width:360px){.mnb-l{font-size:12px!important}.mobile-nav-btn{padding:0 8px!important}.mobile-nav-btns{gap:6px!important}}
 /* Desktop: stessa sequenza nella colonna */
-.sidebar-brand{padding-top:40px!important;display:flex;flex-direction:column;align-items:center}
+.sidebar-brand{padding-top:48px!important;display:flex;flex-direction:column;align-items:center}
 .sidebar-brand .fu-top{margin-bottom:64px}
-.brand-logo{max-width:190px!important}
-.nav-views{align-items:center;padding-top:0!important}
-.btn-view{width:200px!important;height:32px!important;font-size:9.5px!important;letter-spacing:.14em!important}
+.brand-logo{max-width:230px!important}
+.nav-views{align-items:center;padding-top:36px!important;gap:10px!important}
+.btn-view{width:236px!important;height:50px!important;font-size:15px!important;color:var(--carta)}
+.sidebar-brand .slogan,.brand-sub{font-size:14px!important}
 .sidebar-filters{border-top:0!important}
 .legal-note{text-align:center}
 @keyframes fuRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.fu-top,.fu-center>*{animation:fuRise .9s cubic-bezier(.2,.7,.2,1) both}
-.fu-center>*:nth-child(2){animation-delay:.08s}.fu-center>*:nth-child(3){animation-delay:.16s}
+.fu-top,.fu-center>*,.mobile-nav-btns{animation:fuRise .9s cubic-bezier(.2,.7,.2,1) both}
+.fu-center>*:nth-child(2){animation-delay:.08s}.mobile-nav-btns{animation-delay:.16s}
 </style>
 <style id="fu-dark">
 /* FURIA · tema scuro: blu notte e crema, stessa identità invertita */
@@ -550,13 +556,12 @@ html[data-theme="dark"] .brand-logo,html[data-theme="dark"] .mobile-landing-logo
   <div class="fu-center">
     <h1><img class="mobile-landing-logo" src="logo.svg" alt="Furia" width="1851" height="504"></h1>
     <p class="mobile-landing-sub">Carta dei vini</p>
-    <nav class="mobile-nav-btns" aria-label="Scegli la carta">
-      <button class="mobile-nav-btn" onclick="setViewMobile('calice')"><span class="mnb-l">Al calice</span></button>
-      <button class="mobile-nav-btn" onclick="setViewMobile('mescita')"><span class="mnb-l">Carta breve</span></button>
-      <button class="mobile-nav-btn" onclick="setViewMobile('cantina')"><span class="mnb-l">Cantina completa</span></button>
-    </nav>
   </div>
-  <div class="fu-bottom" aria-hidden="true"></div>
+  <nav class="mobile-nav-btns" aria-label="Scegli la carta">
+    <button class="mobile-nav-btn" onclick="setViewMobile('calice')"><span class="mnb-l">Al calice</span></button>
+    <button class="mobile-nav-btn" onclick="setViewMobile('mescita')"><span class="mnb-l">Carta breve</span></button>
+    <button class="mobile-nav-btn" onclick="setViewMobile('cantina')"><span class="mnb-l">Cantina</span></button>
+  </nav>
 </div>
 
 <button class="btn-back-mobile" id="btn-back-mobile" style="display:none" onclick="backToLanding()">Indietro<span class="alga" aria-hidden="true"></span></button>
