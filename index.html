@@ -519,10 +519,11 @@ window.fuThemeApply=function(){apply(D.getAttribute("data-theme")||"light")};})(
 .fu-center{width:100%;display:flex;flex-direction:column;align-items:center;margin:auto 0}
 .fu-center h1{margin:0!important;width:100%;text-align:center}
 .mobile-landing-logo{max-width:min(74vw,340px)!important;margin:0 auto}
-.mobile-nav-btns{display:flex!important;flex-direction:row!important;width:100%!important;max-width:560px!important;
-  margin:0 0 72px!important;gap:10px!important}
-.mobile-nav-btn{flex:1 1 0;width:auto!important}
-@media(max-width:360px){.mnb-l{font-size:12px!important}.mobile-nav-btn{padding:0 8px!important}.mobile-nav-btns{gap:6px!important}}
+.mobile-nav-btns{display:flex!important;flex-direction:column!important;align-items:center;width:100%!important;
+  margin:28px 0 0!important;gap:10px!important}
+.mobile-nav-btn{width:236px!important;height:48px!important}
+.mnb-l{font-size:14.5px!important}
+.fu-bottom{height:110px;flex-shrink:0}
 /* Desktop: stessa sequenza nella colonna */
 .sidebar-brand{padding-top:48px!important;display:flex;flex-direction:column;align-items:center}
 .sidebar-brand .fu-top{margin-bottom:64px}
@@ -533,8 +534,8 @@ window.fuThemeApply=function(){apply(D.getAttribute("data-theme")||"light")};})(
 .sidebar-filters{border-top:0!important}
 .legal-note{text-align:center}
 @keyframes fuRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.fu-top,.fu-center>*,.mobile-nav-btns{animation:fuRise .9s cubic-bezier(.2,.7,.2,1) both}
-.fu-center>*:nth-child(2){animation-delay:.08s}.mobile-nav-btns{animation-delay:.16s}
+.fu-top,.fu-center>*{animation:fuRise .9s cubic-bezier(.2,.7,.2,1) both}
+.fu-center>*:nth-child(2){animation-delay:.08s}.fu-center>*:nth-child(3){animation-delay:.16s}
 </style>
 <style id="fu-dark">
 /* FURIA · tema scuro: blu notte e crema, stessa identità invertita */
@@ -556,12 +557,13 @@ html[data-theme="dark"] .brand-logo,html[data-theme="dark"] .mobile-landing-logo
   <div class="fu-center">
     <h1><img class="mobile-landing-logo" src="logo.svg" alt="Furia" width="1851" height="504"></h1>
     <p class="mobile-landing-sub">Carta dei vini</p>
+    <nav class="mobile-nav-btns" aria-label="Scegli la carta">
+      <button class="mobile-nav-btn" onclick="setViewMobile('calice')"><span class="mnb-l">Al calice</span></button>
+      <button class="mobile-nav-btn" onclick="setViewMobile('mescita')"><span class="mnb-l">Carta breve</span></button>
+      <button class="mobile-nav-btn" onclick="setViewMobile('cantina')"><span class="mnb-l">Cantina completa</span></button>
+    </nav>
   </div>
-  <nav class="mobile-nav-btns" aria-label="Scegli la carta">
-    <button class="mobile-nav-btn" onclick="setViewMobile('calice')"><span class="mnb-l">Al calice</span></button>
-    <button class="mobile-nav-btn" onclick="setViewMobile('mescita')"><span class="mnb-l">Carta breve</span></button>
-    <button class="mobile-nav-btn" onclick="setViewMobile('cantina')"><span class="mnb-l">Cantina</span></button>
-  </nav>
+  <div class="fu-bottom" aria-hidden="true"></div>
 </div>
 
 <button class="btn-back-mobile" id="btn-back-mobile" style="display:none" onclick="backToLanding()">Indietro<span class="alga" aria-hidden="true"></span></button>
