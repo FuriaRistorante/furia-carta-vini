@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Carta dei Vini — Furia</title>
+<meta name="description" content="La carta dei vini di Furia, ristorante senza sella.">
+<meta name="theme-color" content="#E9EAE4">
+<meta name="color-scheme" content="light">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Carta dei Vini — Furia">
+<meta property="og:description" content="Al calice, carta breve e cantina completa.">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+/* ════════════════════════════════════════════════════════════════
+   FURIA — sistema visivo della carta (27/11/2026)
+   Allineato al sito furia e alla carta stampata: fondo crema, tutto in
+   blu #1C269A, Helvetica regular per il testo e bold per i titoli,
+   comandi a pillola con filo blu da 1px. Niente corsivi, niente ombre.
+   Logo e cavallino: file ufficiali (Drive "WINE LIST-materials to share").
+   ════════════════════════════════════════════════════════════════ */
+:root{
+  color-scheme:light;
+  /* Palette ufficiale Furia (PALETTE.png + sito): crema #E9EAE4/#EAEBE6, blu #1C269A */
+  --blu:#E9EAE4;        /* pannelli: stesso crema del sito, piatto */
+  --notte:#E9EAE4;      /* fondo di lettura */
+  --alga:rgba(28,38,154,.05); /* cavallino ritagliato, tono su tono */
+  --carta:#1C269A;      /* blu: testo principale e comandi attivi */
+  --carta-2:#3A43AA;    /* testo secondario */
+  --carta-3:#6C72BD;    /* note, conteggi */
+  --filo:rgba(28,38,154,.16); /* linee sottili */
+  --filo-2:#1C269A;     /* bordi dei comandi: filo blu 1px come sul sito */
+  --inchiostro:#E9EAE4; /* testo sulla scheda (fondo blu) */
+  --inch-2:#C4C7E6;
+  --inch-filo:rgba(233,234,228,.28);
+  --fresco:#1C269A;     /* fiocco "servito in fresco", come in carta stampata */
+
+  --f:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --gut:20px;
+  --r-sheet:16px;
+  --pill-h:36px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--notte);color:var(--carta);
+  font-family:var(--f);font-size:15px;line-height:1.5;
+  font-feature-settings:"kern","tnum" 0;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--carta);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* L'alga del marchio, ritagliata: un'unica forma, colore dal contesto */
+.alga{
+  display:block;aspect-ratio:1867/1395;background:currentColor;
+  -webkit-mask:url(alga.svg) center/contain no-repeat;mask:url(alga.svg) center/contain no-repeat;
+  pointer-events:none;
+}
+
+/* ── COMANDI: una sola famiglia a pillola ───────────────────────── */
+.pill,.chip,.sort-select,.fresco-toggle,.btn-reset-all,.drawer-apply button,.sel-cta,.sel-go,.sel-clear,.btn-view,.filter-fab{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  height:var(--pill-h);padding:0 16px;
+  border:1px solid var(--filo-2);border-radius:999px;background:transparent;color:var(--carta-2);
+  font-family:var(--f);font-size:13px;font-weight:400;letter-spacing:.005em;line-height:1;
+  white-space:nowrap;cursor:pointer;
+  transition:background-color .15s,color .15s,border-color .15s;
+}
+.pill:hover,.chip:hover,.sort-select:hover,.fresco-toggle:hover,.btn-reset-all:hover,.btn-view:hover{border-color:var(--carta-3);color:var(--carta)}
+.chip.on,.fresco-toggle.active,.btn-view.active{background:var(--carta);border-color:var(--carta);color:var(--notte)}
+
+/* ════════════════════════════════════════════════════════════════
+   LISTA
+   ════════════════════════════════════════════════════════════════ */
+.main-content{padding:0 var(--gut) 120px}
+
+/* Ricerca */
+.search-bar-wrap{display:none;position:sticky;top:var(--stick-top,0px);z-index:31;margin:0 calc(-1*var(--gut));padding:16px var(--gut) 4px;background:var(--notte)}
+.search-bar-wrap.visible{display:block}
+.search-bar-inner{position:relative}
+.search-input.pill{
+  width:100%;height:44px;padding:0 44px;justify-content:flex-start;
+  font-size:15px;font-weight:400;color:var(--carta);background:var(--blu);border-color:var(--filo-2);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20' fill='none'%3E%3Ccircle cx='8.5' cy='8.5' r='5.5' stroke='%238E99A3' stroke-width='1.6'/%3E%3Cpath d='M13 13L17 17' stroke='%238E99A3' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:17px center;
+  outline:none;-webkit-appearance:none;appearance:none;cursor:text;
+}
+.search-input.pill::-webkit-search-cancel-button{display:none}
+.search-input.pill:focus{border-color:var(--carta-3)}
+.search-input.pill::placeholder{color:var(--carta-3)}
+.search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;font-size:20px;line-height:1;color:var(--carta-3);display:none;align-items:center;justify-content:center}
+.search-clear.show{display:flex}
+.search-clear:hover{color:var(--carta)}
+
+/* Indice tipologie (sticky) */
+.chipnav{
+  position:sticky;top:calc(var(--stick-top,0px) + var(--search-h,0px));z-index:30;
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin:0 calc(-1*var(--gut));padding:16px var(--gut) 12px;
+  background:var(--notte);
+}
+.chipnav:empty{display:none}
+.chip i{display:none}
+.chip b{font-weight:400;color:var(--carta-3);font-variant-numeric:tabular-nums}
+.chip.on b{color:var(--inch-2)}
+
+/* Strumenti: ordina · in fresco · conteggio */
+.tools{display:flex;align-items:center;gap:8px;padding:0 0 16px;border-bottom:1px solid var(--filo)}
+.sort-bar{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.sort-select{
+  -webkit-appearance:none;appearance:none;outline:none;padding:0 34px 0 16px;background:var(--notte);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23BFB8AB' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;
+}
+.sort-select option{background:var(--blu);color:var(--carta)}
+.fresco-toggle{margin-left:auto;color:var(--fresco)}
+.fresco-toggle .w-fresco{color:inherit}
+.fresco-toggle.active{background:var(--fresco);border-color:var(--fresco);color:var(--notte)}
+.results-count{font-size:12px;color:var(--carta-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* Gerarchia: tipologia → paese → regione → produttore → referenze */
+#wine-list .sezione{padding-top:8px;scroll-margin-top:calc(var(--stick-top,0px) + var(--search-h,0px) + var(--nav-h,0px) - 8px)}
+#wine-list .sezione+.sezione{margin-top:40px}
+#wine-list .sezione-titolo{
+  display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+  font-size:22px;font-weight:700;letter-spacing:.01em;text-transform:uppercase;line-height:1.1;
+  color:var(--carta);padding:36px 0 14px;
+}
+.sez-n{font-size:12px;font-weight:400;letter-spacing:0;color:var(--carta-3);font-variant-numeric:tabular-nums;white-space:nowrap}
+.sez-n::after{content:" etichette"}
+
+.grp-l1{
+  position:sticky;top:calc(var(--stick-top,0px) + var(--search-h,0px) + var(--nav-h,0px));z-index:20;
+  padding:11px 0 10px;
+  background:var(--notte);border-top:1px solid var(--filo-2);border-bottom:1px solid var(--filo);
+  font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--carta-2);
+}
+.grp-l2{font-size:16px;font-weight:700;color:var(--carta);padding:26px 0 2px}
+.paese-blk>.reg-blk:first-of-type>.grp-l2{padding-top:20px}
+
+.prod{margin:16px 0 0}
+.prod-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding-bottom:2px}
+.prod-n{font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--carta-2)}
+.prod-z{font-size:13px;color:var(--carta-3)}
+
+.ref{display:flex;align-items:center;gap:14px;min-height:56px;padding:8px 0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ref+.ref{border-top:1px solid var(--filo)}
+.ref-main{flex:1;min-width:0}
+.ref-nome{font-size:17px;font-weight:420;line-height:1.3;color:var(--carta);transition:color .15s}
+.ref:hover .ref-nome{color:#fff}
+.w-annata{font-size:14px;font-weight:400;color:var(--carta-3);font-variant-numeric:tabular-nums;white-space:nowrap}
+.w-formato{margin-left:4px;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--carta-2);white-space:nowrap}
+.ref-meta{font-size:13px;color:var(--carta-3);margin-top:3px;line-height:1.4}
+.ref-meta i{font-style:normal}
+.w-sep{opacity:.6}
+.ref-price{flex-shrink:0;min-width:70px;display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
+.w-price{font-size:17px;font-weight:400;font-variant-numeric:tabular-nums;color:var(--carta);white-space:nowrap}
+.w-price-na{font-size:13px;font-weight:400;color:var(--carta-3)}
+.ref-calice{font-size:12px;color:var(--carta-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* Segni: in fresco, novità */
+.w-fresco{display:inline-flex;vertical-align:-.12em;margin-left:7px;color:var(--fresco)}
+.w-fresco svg{width:.95em;height:.95em}
+.w-novita{
+  display:inline-block;margin-left:8px;padding:3px 8px 2px;vertical-align:.12em;
+  border-radius:999px;background:var(--carta);color:var(--notte);
+  font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;line-height:1.2;white-space:nowrap;
+}
+.fresco-legenda{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:40px;padding-top:20px;border-top:1px solid var(--filo);font-size:13px;color:var(--carta-3)}
+.fresco-legenda .w-fresco{margin:0}
+
+/* Aggiungi alla selezione */
+.sel-btn{
+  position:relative;flex-shrink:0;width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--filo-2);color:var(--carta-2);
+  transition:background-color .15s,border-color .15s,color .15s;
+}
+.sel-btn::before,.sel-btn::after{content:"";position:absolute;left:50%;top:50%;background:currentColor;border-radius:1px}
+.sel-btn::before{width:13px;height:1.5px;transform:translate(-50%,-50%)}
+.sel-btn::after{width:1.5px;height:13px;transform:translate(-50%,-50%)}
+.sel-btn:hover{border-color:var(--carta-2);color:var(--carta)}
+.sel-btn[aria-pressed="true"]{background:var(--carta);border-color:var(--carta);color:var(--notte)}
+.sel-btn[aria-pressed="true"]::before{width:6px;height:1.8px;transform:translate(-90%,40%) rotate(45deg)}
+.sel-btn[aria-pressed="true"]::after{width:1.8px;height:12px;transform:translate(60%,-55%) rotate(40deg)}
+
+.vuoto{padding:72px 0;text-align:center;color:var(--carta-3);font-size:15px}
+
+.legal-note{margin-top:56px;padding-top:20px;border-top:1px solid var(--filo);font-size:12px;line-height:1.65;color:var(--carta-3)}
+.legal-note p+p{margin-top:6px}
+.legal-note a{text-decoration:underline;text-underline-offset:2px}
+.legal-note a:hover{color:var(--carta)}
+
+/* ════════════════════════════════════════════════════════════════
+   FILTRI — barra laterale (desktop) e cassetto (mobile), stesso stile
+   ════════════════════════════════════════════════════════════════ */
+.sb-acc-wrap{border-bottom:1px solid var(--filo-2)}
+.sb-acc-head{display:flex;justify-content:space-between;align-items:center;min-height:48px;cursor:pointer;user-select:none}
+.sb-acc-title{font-size:14px;font-weight:400;color:var(--carta)}
+.sb-acc-arrow{position:relative;width:11px;height:11px;font-size:0;color:var(--carta-3)}
+.sb-acc-arrow::before,.sb-acc-arrow::after{content:"";position:absolute;left:0;top:5px;width:11px;height:1.5px;background:currentColor;transition:transform .2s var(--ease)}
+.sb-acc-arrow::after{transform:rotate(90deg)}
+.sb-acc-wrap.open .sb-acc-arrow::after{transform:rotate(0)}
+.sb-acc-body{max-height:0;overflow:hidden;transition:max-height .3s var(--ease)}
+.sb-acc-wrap.open .sb-acc-body{max-height:320px;overflow-y:auto;padding-bottom:10px}
+.sb-filter-list{list-style:none}
+.sb-filter-item{position:relative;padding:7px 0 7px 16px;font-size:14px;color:var(--carta-2);cursor:pointer;transition:color .1s}
+.sb-filter-item:hover{color:var(--carta)}
+.sb-filter-item.active{color:var(--carta);font-weight:700}
+.sb-filter-item.active::before{content:"";position:absolute;left:2px;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:var(--carta)}
+.dual-range-wrap{position:relative;height:32px;margin:4px 8px 0}
+.dual-range-track,.dual-range-fill{position:absolute;top:50%;height:2px;transform:translateY(-50%)}
+.dual-range-track{left:0;right:0;background:var(--filo-2)}
+.dual-range-fill{background:var(--carta-2)}
+.dual-range-wrap input[type=range]{position:absolute;width:100%;top:50%;transform:translateY(-50%);-webkit-appearance:none;appearance:none;background:transparent;pointer-events:none;height:24px;margin:0}
+.dual-range-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--carta);border:0;pointer-events:auto;cursor:pointer}
+.dual-range-wrap input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--carta);border:0;pointer-events:auto;cursor:pointer}
+.price-row{display:flex;justify-content:space-between;padding:6px 0 0;font-size:13px;color:var(--carta-2);font-variant-numeric:tabular-nums}
+.sb-sec{padding:16px 0 4px}
+
+/* ════════════════════════════════════════════════════════════════
+   SCHEDA VINO — su carta crema
+   ════════════════════════════════════════════════════════════════ */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(9,16,24,.72);align-items:center;justify-content:center;padding:24px}
+.modal-overlay.show{display:flex}
+.modal-card{
+  position:relative;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;
+  background:var(--carta);color:var(--inchiostro);border-radius:var(--r-sheet);
+  animation:sheetIn .26s var(--ease);
+}
+@keyframes sheetIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.modal-hero-div{position:relative;padding:28px 64px 20px 28px}
+.modal-hero-div .alga{position:absolute;right:22px;top:20px;height:64px;color:var(--inchiostro)}
+.modal-cat{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--inch-2);margin-bottom:10px}
+.modal-nome{font-size:28px;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.modal-annata{margin-top:8px;font-size:15px;color:var(--inch-2);font-variant-numeric:tabular-nums}
+.modal-close{
+  position:absolute;top:10px;right:10px;z-index:2;width:44px;height:44px;border-radius:50%;
+  display:none;align-items:center;justify-content:center;color:var(--inchiostro);font-size:24px;line-height:1;
+}
+.modal-close:hover{background:rgba(30,51,71,.08)}
+.modal-prezzo{display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px;margin:0 28px;padding:16px 0;border-top:1px solid var(--inch-filo);border-bottom:1px solid var(--inch-filo)}
+.modal-p-item{display:flex;flex-direction:column;gap:2px}
+.modal-p-lbl{font-size:12px;color:var(--inch-2)}
+.modal-p-val{font-size:24px;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.sel-cta{margin-left:auto;height:42px;border-color:var(--inchiostro);color:var(--inchiostro)}
+.sel-cta:hover{background:rgba(30,51,71,.06)}
+.sel-cta[aria-pressed="true"]{background:var(--inchiostro);border-color:var(--inchiostro);color:var(--carta)}
+.modal-body{padding:18px 28px 24px}
+.modal-row{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:5px 0;font-size:15px}
+.modal-lbl{font-size:13px;color:var(--inch-2);padding-top:1px}
+.modal-val{color:var(--inchiostro)}
+.modal-note{margin:0 28px 28px;padding-top:16px;border-top:1px solid var(--inch-filo)}
+.modal-note-lbl{font-size:13px;color:var(--inch-2);margin-bottom:4px}
+.modal-note-txt{font-size:16px;line-height:1.55}
+.modal-novita{margin-left:6px;vertical-align:.1em;background:var(--inchiostro);color:var(--carta)}
+
+/* ════════════════════════════════════════════════════════════════
+   SELEZIONE — elenco personale e versione "da mostrare al personale"
+   ════════════════════════════════════════════════════════════════ */
+.sel-fab{
+  display:none;position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));right:16px;z-index:91;
+  height:48px;padding:0 6px 0 20px;border-radius:999px;
+  background:var(--carta);color:var(--notte);align-items:center;gap:12px;
+  font-size:14px;font-weight:700;
+  box-shadow:0 8px 24px rgba(5,10,16,.45);
+}
+.sel-fab .sel-n{background:var(--notte);color:var(--carta);border-radius:999px;min-width:36px;height:36px;padding:0 6px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-variant-numeric:tabular-nums}
+body.has-sel .sel-fab{display:flex}
+.sel-fab.bump{animation:selBump .3s var(--ease)}
+@keyframes selBump{40%{transform:scale(1.05)}}
+
+.sel-overlay{display:none;position:fixed;inset:0;z-index:210;background:rgba(9,16,24,.72);align-items:center;justify-content:center;padding:24px}
+.sel-overlay.show{display:flex}
+.sel-card{width:100%;max-width:480px;max-height:88vh;overflow-y:auto;background:var(--carta);color:var(--inchiostro);border-radius:var(--r-sheet);animation:sheetIn .26s var(--ease)}
+.sel-hdr{display:flex;justify-content:space-between;align-items:center;padding:20px 12px 12px 24px}
+.sel-hdr span{font-size:20px;font-weight:700;}
+.sel-x,.sel-rm{width:44px;height:44px;border-radius:50%;font-size:24px;line-height:1;color:var(--inch-2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sel-x:hover,.sel-rm:hover{background:rgba(30,51,71,.08);color:var(--inchiostro)}
+.sel-list{list-style:none;padding:0 24px}
+.sel-it{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--inch-filo)}
+.sel-it-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.sel-it-prod{font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--inch-2)}
+.sel-it-nome{font-size:17px;line-height:1.3}
+.sel-it-nome em{font-style:normal;font-size:14px;color:var(--inch-2)}
+.sel-it-nome .w-novita{background:var(--inchiostro);color:var(--carta)}
+.sel-it-p{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sel-tot{display:flex;justify-content:space-between;align-items:baseline;margin:0 24px;padding:14px 0;border-top:1px solid var(--inchiostro);font-size:14px;color:var(--inch-2);font-variant-numeric:tabular-nums}
+.sel-tot span:last-child{font-size:19px;font-weight:700;color:var(--inchiostro)}
+.sel-acts{display:flex;gap:10px;padding:4px 24px 24px}
+.sel-go,.sel-clear{height:48px;font-size:14px}
+.sel-go{flex:1;background:var(--inchiostro);border-color:var(--inchiostro);color:var(--carta)}
+.sel-go:hover{background:#2a4560}
+.sel-clear{border-color:var(--inch-filo);color:var(--inch-2)}
+.sel-clear:hover{border-color:var(--inch-2);color:var(--inchiostro)}
+/* Da mostrare al personale: a tutto schermo, corpo grande */
+.sel-overlay.sel-show{padding:0;background:var(--carta)}
+.sel-show .sel-card{max-width:none;max-height:none;height:100%;border-radius:0;animation:none;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.sel-show .sel-hdr{max-width:760px;margin:0 auto;padding:28px 16px 16px 24px}
+.sel-show .sel-hdr span{font-size:30px}
+.sel-show .sel-list{max-width:760px;margin:0 auto}
+.sel-show .sel-it{padding:20px 0}
+.sel-show .sel-it-prod{font-size:14px}
+.sel-show .sel-it-nome{font-size:26px;font-weight:400}
+.sel-show .sel-it-nome em{font-size:20px}
+.sel-show .sel-it-p{font-size:24px}
+
+/* ════════════════════════════════════════════════════════════════
+   CASSETTO FILTRI (mobile)
+   ════════════════════════════════════════════════════════════════ */
+.drawer-overlay{position:fixed;inset:0;z-index:100;background:rgba(9,16,24,.6);opacity:0;pointer-events:none;transition:opacity .25s}
+.drawer-overlay.show{opacity:1;pointer-events:auto}
+.filter-drawer{
+  position:fixed;left:0;right:0;bottom:0;z-index:101;
+  max-height:82vh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  background:var(--blu);border-radius:var(--r-sheet) var(--r-sheet) 0 0;
+  padding:0 var(--gut) env(safe-area-inset-bottom);
+  transform:translateY(100%);transition:transform .32s var(--ease);
+}
+.filter-drawer.open{transform:none}
+.drawer-handle{width:36px;height:4px;border-radius:2px;background:var(--filo-2);margin:10px auto 0}
+.drawer-hdr{display:flex;justify-content:space-between;align-items:center;padding:8px 0 8px;border-bottom:1px solid var(--filo-2)}
+.drawer-hdr span{font-size:20px;font-weight:700;}
+.drawer-hdr button{width:44px;height:44px;margin-right:-10px;font-size:24px;line-height:1;color:var(--carta-2)}
+.drawer-body{padding:12px 0 24px}
+.drawer-fresco{width:100%;height:44px;margin:4px 0 8px}
+.drawer-apply{position:sticky;bottom:0;padding:12px 0 16px;background:var(--blu)}
+.drawer-apply button{width:100%;height:48px;font-size:14px;background:var(--carta);border-color:var(--carta);color:var(--notte)}
+.filter-fab{
+  display:none;position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:16px;z-index:90;
+  height:48px;padding:0 20px;background:var(--blu);border-color:var(--filo-2);color:var(--carta);font-size:14px;
+  box-shadow:0 8px 24px rgba(5,10,16,.45);
+}
+.fab-badge{display:none;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--carta);color:var(--notte);font-size:12px;font-weight:700;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.fab-badge.show{display:inline-flex}
+
+/* ════════════════════════════════════════════════════════════════
+   DESKTOP (≥1024px) — copertina a sinistra, carta a destra
+   ════════════════════════════════════════════════════════════════ */
+@media(min-width:1024px){
+  :root{--gut:56px}
+  html,body{height:100%;overflow:hidden}
+  body{display:flex}
+  .mobile-landing,.btn-back-mobile,.filter-fab,.drawer-overlay,.filter-drawer{display:none!important}
+
+  .sidebar-col{
+    position:relative;width:320px;flex-shrink:0;height:100vh;
+    display:flex;flex-direction:column;overflow:hidden;
+    background:var(--blu);
+  }
+  .sidebar-col>.alga{position:absolute;left:-70px;bottom:-60px;height:62vh;color:var(--alga);z-index:0}
+  .sidebar-col>*:not(.alga){position:relative;z-index:1}
+  .sidebar-brand{padding:44px 40px 0}
+  .brand-logo{display:block;width:100%;height:auto}
+  .brand-sub{margin-top:18px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--carta-2)}
+  .nav-views{display:flex;flex-direction:column;gap:8px;padding:36px 40px 28px}
+  .btn-view{width:100%;height:44px;justify-content:space-between;font-size:14px;color:var(--carta)}
+  .btn-view.active{color:var(--blu)}
+  .btn-view-sub{display:none}
+  .sidebar-filters{flex:1;min-height:0;display:none;flex-direction:column;border-top:1px solid var(--filo-2)}
+  .sidebar-filters.visible{display:flex}
+  #sidebar-inner{flex:1;overflow-y:auto;padding:4px 40px 96px;scrollbar-width:thin;scrollbar-color:var(--filo-2) transparent}
+
+  .wine-col{flex:1;min-width:0;height:100vh;overflow-y:auto;background:var(--notte)}
+  .page-wrap{max-width:calc(760px + 2*var(--gut));margin:0 auto}
+  .search-bar-wrap{padding-top:28px}
+  .chipnav{padding-top:20px}
+  body:not(.view-cantina) .chipnav{padding-top:36px}
+  #wine-list .sezione-titolo{font-size:48px}
+
+  .sel-fab{left:40px;right:auto;bottom:28px;width:240px;justify-content:space-between;box-shadow:none}
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE (≤1023px)
+   ════════════════════════════════════════════════════════════════ */
+@media(max-width:1023px){
+  body>.sidebar-col{display:none}
+
+  /* Copertina: blocco centrato, l'alga dietro. Se lo schermo è basso si scorre, mai tagliato. */
+  .mobile-landing{
+    position:fixed;top:0;left:0;right:0;height:100vh;height:100dvh;z-index:50;
+    overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    display:flex;flex-direction:column;align-items:center;
+    padding:32px var(--gut) calc(32px + env(safe-area-inset-bottom));
+    background:var(--blu);
+    transition:opacity .22s var(--ease),transform .22s var(--ease);
+  }
+  .mobile-landing>.alga{position:fixed;left:50%;top:50%;height:min(86vh,720px);transform:translate(-30%,-50%);color:var(--alga)}
+  .mobile-landing>h1{margin-top:auto}
+  .mobile-nav-btns{margin-bottom:auto}
+  .mobile-landing>h1,.mobile-landing-sub,.mobile-nav-btns{width:100%;max-width:400px}
+  .mobile-landing>*:not(.alga){position:relative}
+  .mobile-landing.hidden{display:none!important}
+  .mobile-landing.is-leaving{opacity:0;transform:translateY(-8px);pointer-events:none}
+  .mobile-landing-logo{display:block;width:100%;height:auto}
+  .mobile-landing-sub{text-align:center;margin:16px 0 32px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--carta-2)}
+  .mobile-nav-btns{display:flex;flex-direction:column;gap:10px}
+  .mobile-nav-btn{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;
+    min-height:72px;padding:12px 22px 12px 26px;text-align:left;
+    border:1px solid var(--filo-2);border-radius:999px;background:var(--blu);
+    transition:background-color .15s,border-color .15s;
+  }
+  .mobile-nav-btn:active{background:var(--alga);border-color:var(--carta-3)}
+  .mnb-l{display:block;font-size:19px;font-weight:700;line-height:1.15;color:var(--carta)}
+  .mnb-s{display:block;margin-top:3px;font-size:13px;line-height:1.3;color:var(--carta-2)}
+  .mnb-a{flex-shrink:0;width:9px;height:9px;border-top:1.6px solid var(--carta-2);border-right:1.6px solid var(--carta-2);transform:rotate(45deg)}
+
+  .btn-back-mobile{
+    display:flex!important;align-items:center;gap:12px;
+    position:fixed;top:0;left:0;right:0;z-index:49;
+    height:calc(52px + env(safe-area-inset-top));padding:env(safe-area-inset-top) var(--gut) 0;
+    background:var(--blu);border-bottom:1px solid var(--filo-2);
+    font-size:14px;font-weight:400;color:var(--carta);
+  }
+  .btn-back-mobile::before{content:"";width:9px;height:9px;border-bottom:1.6px solid currentColor;border-left:1.6px solid currentColor;transform:rotate(45deg);margin-left:2px}
+  .btn-back-mobile .alga{height:30px;margin-left:auto;color:var(--carta-2)}
+
+  .page-wrap{max-width:640px;margin:0 auto}
+  body.mobile-list-view .wine-col{padding-top:calc(52px + env(safe-area-inset-top))}
+  body.mobile-list-view .filter-fab{display:none}
+  body.mobile-list-view.view-cantina .filter-fab{display:inline-flex}
+  body:not(.mobile-list-view) .sel-fab{display:none!important}
+
+  /* Cantina: resta fissa la ricerca; le tipologie scorrono via per lasciare spazio ai vini */
+  body.view-cantina .chipnav{position:static}
+  .search-bar-wrap{padding-top:12px;padding-bottom:8px}
+  /* Tipologie in griglia: tutte visibili, niente scorrimento orizzontale */
+  .chipnav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:12px var(--gut) 10px}
+  .chip{height:34px;padding:0 6px;gap:5px;font-size:13px;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .chip b{font-size:11.5px}
+  .tools{padding-top:4px}
+  .results-count{display:none}
+  .fresco-toggle{padding:0 14px}
+
+  #wine-list .sezione-titolo{font-size:34px;padding:28px 0 12px}
+  .ref{gap:12px}
+  .ref-nome{font-size:16.5px}
+  .ref-price{min-width:60px}
+
+  .modal-overlay,.sel-overlay{padding:0;align-items:flex-end}
+  .modal-card,.sel-card{max-width:100%;max-height:92vh;border-radius:var(--r-sheet) var(--r-sheet) 0 0;padding-bottom:env(safe-area-inset-bottom)}
+  .modal-hero-div{padding:24px 64px 18px 20px}
+  .modal-hero-div .alga{display:none}
+  .modal-close{display:flex}
+  .modal-nome{font-size:24px}
+  .modal-prezzo{margin:0 20px}
+  .modal-body{padding:16px 20px 20px}
+  .modal-note{margin:0 20px 24px}
+  .sel-cta{margin-left:0;width:100%}
+  .sel-hdr{padding-left:20px}
+  .sel-list{padding:0 20px}
+  .sel-tot{margin:0 20px}
+  .sel-acts{padding:4px 20px 20px}
+  .sel-show .sel-card{height:100%;max-height:none;border-radius:0}
+}
+@media(min-width:1024px){.modal-close{display:flex}.modal-hero-div{padding-right:120px}.modal-hero-div .alga{right:64px}}
+@media(max-width:380px){.chip{font-size:12px}.chip b{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* ── FURIA: ritocchi d'identità (dal sito) ─────────────────────── */
+.slogan{font-size:13px;font-weight:400;letter-spacing:.02em;text-transform:uppercase;color:var(--carta);text-align:center;margin-bottom:22px}
+.sidebar-brand{text-align:center}
+.brand-logo{max-width:200px;margin:0 auto}
+.mobile-landing-logo{max-width:220px!important;margin:0 auto}
+.brand-sub,.mobile-landing-sub{text-align:center;font-weight:400!important;color:var(--carta)!important}
+.pill,.chip,.sort-select,.fresco-toggle,.btn-reset-all,.btn-view,.filter-fab,.mobile-nav-btn{border-color:var(--carta)}
+.btn-view,.mobile-nav-btn,.mnb-l{text-transform:uppercase}
+.mnb-l{font-size:16px!important;font-weight:400!important;letter-spacing:.01em}
+.btn-view{justify-content:center}
+.sezione-titolo{border-top-color:var(--carta)!important}
+.modal-card,.sel-card{box-shadow:none}
+.sezione-titolo{font-size:18px!important;letter-spacing:.02em!important}
+.mnb-s{text-transform:none}
+</style>
+</head>
+<body>
+
+<!-- ── COPERTINA MOBILE ── -->
+<div class="mobile-landing" id="mobile-landing">
+  <span class="alga" aria-hidden="true"></span>
+  <p class="slogan">Ristorante senza sella</p>
+  <h1><img class="mobile-landing-logo" src="logo.svg" alt="Furia" width="1851" height="504"></h1>
+  <p class="mobile-landing-sub">Carta dei vini</p>
+  <nav class="mobile-nav-btns" aria-label="Scegli la carta">
+    <button class="mobile-nav-btn" onclick="setViewMobile('calice')">
+      <span><span class="mnb-l">Al calice</span><span class="mnb-s">Vini disponibili a bicchiere</span></span><span class="mnb-a" aria-hidden="true"></span>
+    </button>
+    <button class="mobile-nav-btn" onclick="setViewMobile('mescita')">
+      <span><span class="mnb-l">Carta breve</span><span class="mnb-s">Per bere bene senza pensarci troppo</span></span><span class="mnb-a" aria-hidden="true"></span>
+    </button>
+    <button class="mobile-nav-btn" onclick="setViewMobile('cantina')">
+      <span><span class="mnb-l">Cantina completa</span><span class="mnb-s">Tutta la selezione, per scegliere con calma</span></span><span class="mnb-a" aria-hidden="true"></span>
+    </button>
+  </nav>
+</div>
+
+<button class="btn-back-mobile" id="btn-back-mobile" style="display:none" onclick="backToLanding()">Indietro<span class="alga" aria-hidden="true"></span></button>
+
+<!-- ── COPERTINA DESKTOP ── -->
+<aside class="sidebar-col">
+  <span class="alga" aria-hidden="true"></span>
+  <div class="sidebar-brand">
+    <p class="slogan">Ristorante senza sella</p>
+    <img class="brand-logo" src="logo.svg" alt="Furia" width="1851" height="504">
+    <p class="brand-sub">Carta dei vini</p>
+  </div>
+  <nav class="nav-views" aria-label="Scegli la carta">
+    <button class="btn-view active" data-view="calice" onclick="setView('calice')">Al calice</button>
+    <button class="btn-view" data-view="mescita" onclick="setView('mescita')">Carta breve</button>
+    <button class="btn-view" data-view="cantina" onclick="setView('cantina')">Cantina completa</button>
+  </nav>
+  <div class="sidebar-filters" id="sidebar-filters">
+    <div id="sidebar-inner"></div>
+  </div>
+</aside>
+
+<!-- ── CARTA ── -->
+<main class="wine-col">
+  <div class="page-wrap">
+    <div class="main-content">
+      <div class="search-bar-wrap" id="search-bar-wrap">
+        <div class="search-bar-inner">
+          <label class="sr-only" for="search-input">Cerca</label>
+          <input class="search-input pill" id="search-input" type="search" spellcheck="false" autocomplete="off"
+            placeholder="Vino, produttore, vitigno…" oninput="onSearch(this)">
+          <button class="search-clear" id="search-clear" onclick="clearSearch()" aria-label="Cancella ricerca">×</button>
+        </div>
+      </div>
+      <nav class="chipnav" id="chipnav" aria-label="Tipologie"></nav>
+      <div class="tools">
+        <div class="sort-bar" id="sort-bar-wrap"></div>
+        <span class="results-count" id="results-count"></span>
+      </div>
+      <div id="wine-list" spellcheck="false"><div class="vuoto">Un momento, apriamo la cantina…</div></div>
+      <footer class="legal-note">
+        <p>Prezzi in euro, IVA inclusa. Tutti i vini contengono solfiti; alcuni possono essere chiarificati con derivati di uova o latte. Per informazioni sugli allergeni rivolgiti al personale.</p>
+        <p>Vietata la somministrazione di bevande alcoliche ai minori di 18 anni.</p>
+        <p>[DA COMPLETARE: ragione sociale · sede · P.IVA] · <a href="privacy.html">Privacy</a></p>
+      </footer>
+    </div>
+  </div>
+</main>
+
+<!-- Scheda vino -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal-card" id="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-nome">
+    <button class="modal-close" onclick="closeModalDirect()" aria-label="Chiudi">×</button>
+    <div class="modal-hero-div" id="modal-hero">
+      <span class="alga" aria-hidden="true"></span>
+      <div class="modal-cat" id="modal-cat"></div>
+      <h2 class="modal-nome" id="modal-nome"></h2>
+      <div class="modal-annata" id="modal-annata"></div>
+    </div>
+    <div class="modal-prezzo" id="modal-prezzo"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-note" id="modal-note-wrap" style="display:none">
+      <div class="modal-note-lbl">Nota del sommelier</div>
+      <p class="modal-note-txt" id="modal-note-text"></p>
+    </div>
+  </div>
+</div>
+
+<!-- Cassetto filtri mobile -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="filter-drawer" id="filter-drawer" role="dialog" aria-modal="true" aria-label="Filtri">
+  <div class="drawer-handle"></div>
+  <div class="drawer-hdr"><span>Filtri</span><button onclick="closeDrawer()" aria-label="Chiudi">×</button></div>
+  <div class="drawer-body" id="drawer-body"></div>
+  <div class="drawer-apply"><button onclick="closeDrawer()">Mostra i vini</button></div>
+</div>
+<button class="filter-fab" id="filter-fab" onclick="openDrawer()">Filtri <span class="fab-badge" id="fab-badge">0</span></button>
+
+<script src="vendor/supabase.js?v=2.117.3"></script>
+<script>
+  // Database di Furia (progetto Supabase furia-cantina-manager, org Furia).
+  // Chiave pubblica: la RLS consente ad anon solo la lettura di cm_carta.
+  window.CARTA_CONFIG = {
+    sbUrl:  "https://dbkhtlendrhbatpryjcb.supabase.co",
+    sbKey:  "sb_publishable_mQjzVgJh9UVmJ0PGrN4WFQ_-ppBtXIg",
+    dbUser: "furia"
+  };
+</script>
+<script src="carta.js?v=20261122q4"></script>
+</body>
+</html>
